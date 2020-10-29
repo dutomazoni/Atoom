@@ -30,7 +30,7 @@
               <EmptySpace max="-2" attributes="0"/>
               <Group type="103" groupAlignment="0" attributes="0">
                   <Group type="102" alignment="0" attributes="0">
-                      <Component id="btImg" pref="517" max="32767" attributes="0"/>
+                      <Component id="btImg" max="32767" attributes="0"/>
                       <EmptySpace max="-2" attributes="0"/>
                       <Component id="videoPanel" min="-2" max="-2" attributes="0"/>
                       <EmptySpace max="-2" attributes="0"/>
@@ -38,8 +38,14 @@
                   </Group>
                   <Component id="audioProgress" max="32767" attributes="0"/>
                   <Group type="102" alignment="0" attributes="0">
-                      <Component id="curDurationLabel" max="32767" attributes="0"/>
+                      <Component id="curDurationLabel" min="-2" pref="87" max="-2" attributes="0"/>
+                      <EmptySpace type="unrelated" max="-2" attributes="0"/>
+                      <Component id="durationLabel" min="-2" pref="258" max="-2" attributes="0"/>
+                      <EmptySpace max="-2" attributes="0"/>
+                      <Component id="durationField" min="-2" pref="43" max="-2" attributes="0"/>
                       <EmptySpace max="32767" attributes="0"/>
+                      <Component id="fileBrowser" min="-2" pref="22" max="-2" attributes="0"/>
+                      <EmptySpace min="-2" pref="55" max="-2" attributes="0"/>
                       <Component id="btMarker" min="-2" max="-2" attributes="0"/>
                       <EmptySpace max="-2" attributes="0"/>
                       <Component id="btPlay" min="-2" max="-2" attributes="0"/>
@@ -47,9 +53,7 @@
                       <Component id="btPause" min="-2" max="-2" attributes="0"/>
                       <EmptySpace max="-2" attributes="0"/>
                       <Component id="btStop" min="-2" max="-2" attributes="0"/>
-                      <EmptySpace max="32767" attributes="0"/>
-                      <Component id="fileBrowser" min="-2" pref="22" max="-2" attributes="0"/>
-                      <EmptySpace pref="129" max="32767" attributes="0"/>
+                      <EmptySpace pref="22" max="32767" attributes="0"/>
                       <Component id="fullDurationLabel" min="-2" max="-2" attributes="0"/>
                   </Group>
                   <Group type="102" alignment="0" attributes="0">
@@ -71,10 +75,7 @@
                       <EmptySpace min="11" pref="11" max="-2" attributes="0"/>
                       <Group type="103" groupAlignment="0" attributes="0">
                           <Component id="btImg" alignment="0" max="32767" attributes="0"/>
-                          <Group type="102" alignment="0" attributes="0">
-                              <Component id="videoPanel" min="-2" max="-2" attributes="0"/>
-                              <EmptySpace pref="6" max="32767" attributes="0"/>
-                          </Group>
+                          <Component id="videoPanel" alignment="0" min="-2" max="-2" attributes="0"/>
                       </Group>
                       <EmptySpace pref="440" max="32767" attributes="0"/>
                   </Group>
@@ -88,20 +89,36 @@
                   <Component id="urlField" alignment="3" min="-2" max="-2" attributes="0"/>
                   <Component id="btGoWeb" alignment="3" min="-2" max="-2" attributes="0"/>
               </Group>
-              <EmptySpace type="unrelated" max="32767" attributes="0"/>
+              <EmptySpace pref="7" max="32767" attributes="0"/>
               <Component id="audioProgress" min="-2" max="-2" attributes="0"/>
               <EmptySpace max="-2" attributes="0"/>
               <Group type="103" groupAlignment="0" attributes="0">
-                  <Component id="fullDurationLabel" min="-2" max="-2" attributes="0"/>
-                  <Group type="103" alignment="0" groupAlignment="1" attributes="0">
+                  <Group type="102" alignment="1" attributes="0">
+                      <EmptySpace min="0" pref="0" max="32767" attributes="0"/>
                       <Component id="fileBrowser" min="-2" pref="22" max="-2" attributes="0"/>
-                      <Group type="103" alignment="0" groupAlignment="0" attributes="0">
-                          <Component id="btMarker" alignment="1" min="-2" max="-2" attributes="0"/>
-                          <Component id="btPlay" alignment="1" min="-2" max="-2" attributes="0"/>
-                          <Component id="btPause" alignment="1" min="-2" max="-2" attributes="0"/>
+                  </Group>
+                  <Group type="102" attributes="0">
+                      <Group type="103" alignment="0" groupAlignment="3" attributes="0">
+                          <Component id="curDurationLabel" alignment="3" max="32767" attributes="0"/>
+                          <Component id="durationLabel" alignment="3" max="32767" attributes="0"/>
+                          <Component id="durationField" alignment="3" min="-2" max="-2" attributes="0"/>
                       </Group>
-                      <Component id="btStop" alignment="0" min="-2" max="-2" attributes="0"/>
-                      <Component id="curDurationLabel" alignment="0" pref="35" max="32767" attributes="0"/>
+                      <EmptySpace max="32767" attributes="0"/>
+                  </Group>
+                  <Group type="102" attributes="0">
+                      <Component id="fullDurationLabel" min="-2" max="-2" attributes="0"/>
+                      <EmptySpace max="32767" attributes="0"/>
+                  </Group>
+                  <Group type="102" attributes="0">
+                      <Group type="103" groupAlignment="0" attributes="0">
+                          <Group type="103" alignment="0" groupAlignment="0" attributes="0">
+                              <Component id="btMarker" alignment="1" min="-2" max="-2" attributes="0"/>
+                              <Component id="btPlay" alignment="1" min="-2" max="-2" attributes="0"/>
+                              <Component id="btPause" alignment="1" min="-2" max="-2" attributes="0"/>
+                          </Group>
+                          <Component id="btStop" alignment="0" min="-2" max="-2" attributes="0"/>
+                      </Group>
+                      <EmptySpace min="0" pref="0" max="32767" attributes="0"/>
                   </Group>
               </Group>
           </Group>
@@ -286,6 +303,13 @@
     <Component class="javax.swing.JLabel" name="curDurationLabel">
       <Properties>
         <Property name="text" type="java.lang.String" value="teste"/>
+      </Properties>
+    </Component>
+    <Component class="javax.swing.JTextField" name="durationField">
+    </Component>
+    <Component class="javax.swing.JLabel" name="durationLabel">
+      <Properties>
+        <Property name="text" type="java.lang.String" value="Insert the marker duration (in seconds):"/>
       </Properties>
     </Component>
   </SubComponents>

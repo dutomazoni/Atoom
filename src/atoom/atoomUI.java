@@ -19,6 +19,8 @@ import javax.swing.ImageIcon;
 import javax.swing.JFileChooser;
 import javax.swing.border.EmptyBorder;
 import java.io.File;
+import static java.lang.Thread.sleep;
+import java.util.TimerTask;
 import javafx.scene.web.WebView;
 import javax.sound.sampled.AudioInputStream;
 import javax.sound.sampled.AudioSystem;
@@ -57,6 +59,9 @@ public class atoomUI extends JFrame {
     AudioInputStream audioInputStream = null;
     static int fullDuration = 0 ;
     static int curDuration = 0 ;
+    public boolean isPlaying = false;
+    int markerDuration = 0;
+    
     String durLabel = "";
     MediaPlayer player;
     String url = "";
@@ -112,6 +117,8 @@ public class atoomUI extends JFrame {
         audioProgress = new javax.swing.JProgressBar();
         fullDurationLabel = new javax.swing.JLabel();
         curDurationLabel = new javax.swing.JLabel();
+        durationField = new javax.swing.JTextField();
+        durationLabel = new javax.swing.JLabel();
 
         setDefaultCloseOperation(javax.swing.WindowConstants.EXIT_ON_CLOSE);
         setMaximumSize(null);
@@ -233,6 +240,8 @@ public class atoomUI extends JFrame {
 
         curDurationLabel.setText("teste");
 
+        durationLabel.setText("Insert the marker duration (in seconds):");
+
         javax.swing.GroupLayout layout = new javax.swing.GroupLayout(getContentPane());
         getContentPane().setLayout(layout);
         layout.setHorizontalGroup(
@@ -241,15 +250,21 @@ public class atoomUI extends JFrame {
                 .addContainerGap()
                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                     .addGroup(layout.createSequentialGroup()
-                        .addComponent(btImg, javax.swing.GroupLayout.DEFAULT_SIZE, 517, Short.MAX_VALUE)
+                        .addComponent(btImg, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
                         .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                         .addComponent(videoPanel, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
                         .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                         .addComponent(webPanel, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
                     .addComponent(audioProgress, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
                     .addGroup(layout.createSequentialGroup()
-                        .addComponent(curDurationLabel, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                        .addComponent(curDurationLabel, javax.swing.GroupLayout.PREFERRED_SIZE, 87, javax.swing.GroupLayout.PREFERRED_SIZE)
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
+                        .addComponent(durationLabel, javax.swing.GroupLayout.PREFERRED_SIZE, 258, javax.swing.GroupLayout.PREFERRED_SIZE)
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                        .addComponent(durationField, javax.swing.GroupLayout.PREFERRED_SIZE, 43, javax.swing.GroupLayout.PREFERRED_SIZE)
                         .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                        .addComponent(fileBrowser, javax.swing.GroupLayout.PREFERRED_SIZE, 22, javax.swing.GroupLayout.PREFERRED_SIZE)
+                        .addGap(55, 55, 55)
                         .addComponent(btMarker)
                         .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                         .addComponent(btPlay)
@@ -257,9 +272,7 @@ public class atoomUI extends JFrame {
                         .addComponent(btPause)
                         .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                         .addComponent(btStop)
-                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                        .addComponent(fileBrowser, javax.swing.GroupLayout.PREFERRED_SIZE, 22, javax.swing.GroupLayout.PREFERRED_SIZE)
-                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 129, Short.MAX_VALUE)
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 22, Short.MAX_VALUE)
                         .addComponent(fullDurationLabel))
                     .addGroup(layout.createSequentialGroup()
                         .addComponent(urlField, javax.swing.GroupLayout.PREFERRED_SIZE, 200, javax.swing.GroupLayout.PREFERRED_SIZE)
@@ -276,9 +289,7 @@ public class atoomUI extends JFrame {
                         .addGap(11, 11, 11)
                         .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                             .addComponent(btImg, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                            .addGroup(layout.createSequentialGroup()
-                                .addComponent(videoPanel, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 6, Short.MAX_VALUE)))
+                            .addComponent(videoPanel, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
                         .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 440, Short.MAX_VALUE))
                     .addGroup(layout.createSequentialGroup()
                         .addGap(19, 19, 19)
@@ -287,19 +298,30 @@ public class atoomUI extends JFrame {
                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
                     .addComponent(urlField, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
                     .addComponent(btGoWeb))
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 7, Short.MAX_VALUE)
                 .addComponent(audioProgress, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                    .addComponent(fullDurationLabel)
-                    .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING)
-                        .addComponent(fileBrowser, javax.swing.GroupLayout.PREFERRED_SIZE, 22, javax.swing.GroupLayout.PREFERRED_SIZE)
-                        .addGroup(javax.swing.GroupLayout.Alignment.LEADING, layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                            .addComponent(btMarker, javax.swing.GroupLayout.Alignment.TRAILING)
-                            .addComponent(btPlay, javax.swing.GroupLayout.Alignment.TRAILING)
-                            .addComponent(btPause, javax.swing.GroupLayout.Alignment.TRAILING))
-                        .addComponent(btStop, javax.swing.GroupLayout.Alignment.LEADING)
-                        .addComponent(curDurationLabel, javax.swing.GroupLayout.Alignment.LEADING, javax.swing.GroupLayout.DEFAULT_SIZE, 35, Short.MAX_VALUE))))
+                    .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, layout.createSequentialGroup()
+                        .addGap(0, 0, Short.MAX_VALUE)
+                        .addComponent(fileBrowser, javax.swing.GroupLayout.PREFERRED_SIZE, 22, javax.swing.GroupLayout.PREFERRED_SIZE))
+                    .addGroup(layout.createSequentialGroup()
+                        .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                            .addComponent(curDurationLabel, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                            .addComponent(durationLabel, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                            .addComponent(durationField, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
+                        .addContainerGap())
+                    .addGroup(layout.createSequentialGroup()
+                        .addComponent(fullDurationLabel)
+                        .addContainerGap())
+                    .addGroup(layout.createSequentialGroup()
+                        .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                            .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                                .addComponent(btMarker, javax.swing.GroupLayout.Alignment.TRAILING)
+                                .addComponent(btPlay, javax.swing.GroupLayout.Alignment.TRAILING)
+                                .addComponent(btPause, javax.swing.GroupLayout.Alignment.TRAILING))
+                            .addComponent(btStop))
+                        .addGap(0, 0, Short.MAX_VALUE))))
         );
 
         pack();
@@ -368,6 +390,7 @@ public class atoomUI extends JFrame {
     });
     }
     
+
     private void btMarkerActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btMarkerActionPerformed
         // TODO add your handling code here:
 
@@ -389,12 +412,20 @@ public class atoomUI extends JFrame {
 
         String type = filePath.substring(filePath.length() - 3);
         System.out.println(type);
-
-        if(type.equals("pdf"))
+        
+        int startPoint = curDuration;
+        
+        
+        if(durationField.getText().equals("") || durationField.getText().equals("0") )
         {
-            
+            markerDuration = 0;
+        }else
+        {
+            markerDuration = Integer.parseInt(durationField.getText()) * 1000;
         }
         
+        System.out.println(startPoint);
+        System.out.println(markerDuration);
         
         if (type.equals("mp4"))
         {
@@ -417,10 +448,19 @@ public class atoomUI extends JFrame {
                 btImg.setOpaque(false);
                 btImg.setIcon(img);
                 btImg.setVisible(true);
+                
+                
 
             } catch (IOException ex) {
                 Logger.getLogger(atoomUI.class.getName()).log(Level.SEVERE, null, ex);
             }
+
+            
+
+            
+
+
+            
         }
 
         if (type.equals("wav"))
@@ -434,7 +474,7 @@ public class atoomUI extends JFrame {
                 audioInputStream = AudioSystem.getAudioInputStream(file);
                 clip = AudioSystem.getClip();
                 clip.open(audioInputStream);
-                clip.start();
+                
 
                 fullDuration = (int) (clip.getMicrosecondLength()/1000000);
                 fullDurationLabel.setText(String.format("%d:%02d:%02d",  fullDuration / 3600, ( fullDuration % 3600) / 60, ( fullDuration % 60)));
@@ -448,7 +488,7 @@ public class atoomUI extends JFrame {
 
                 //curTime = String.format("%d:%02d:%02d",  curDuration / 3600, ( curDuration % 3600) / 60, ( curDuration % 60));
 
-                int delay = 200; //milliseconds
+                int delay = 100; //milliseconds
                 ActionListener updateProgressBar = new ActionListener() {
                     public void actionPerformed(ActionEvent evt) {
 
@@ -459,7 +499,7 @@ public class atoomUI extends JFrame {
 
                         audioProgress.revalidate();
                         curDurationLabel.revalidate();
-                        System.out.println("executei");
+                        //System.out.println("executei");
                     }
                 };
                 new Timer(delay, updateProgressBar).start();
@@ -475,20 +515,41 @@ public class atoomUI extends JFrame {
         // TODO add your handling code here:
         clip.stop();
         clip.setMicrosecondPosition(0);
+        isPlaying = false;
+        System.out.print(isPlaying);
     }//GEN-LAST:event_btStopActionPerformed
 
     private void btPauseActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btPauseActionPerformed
         // TODO add your handling code here:
         clip.stop();
+        isPlaying = false;
+        System.out.print(isPlaying);
     }//GEN-LAST:event_btPauseActionPerformed
 
     private void btPlayActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btPlayActionPerformed
         // TODO add your handling code here:
         clip.start();
+        isPlaying = true;
+        System.out.print(isPlaying);
+                    // duração da imagem
+            if(isPlaying == true)
+            {
+               java.util.Timer timeImg = new java.util.Timer();
+
+               timeImg.schedule(new java.util.TimerTask() {
+                        @Override
+                        public void run() {
+
+                            btImg.setIcon(null);
+                        }
+                    }, markerDuration); 
+            }
     }//GEN-LAST:event_btPlayActionPerformed
 
     private void btGoWebActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btGoWebActionPerformed
         // TODO add your handling code here:
+        int startPoint = curDuration;
+        int markerDuration = Integer.parseInt(durationField.getText());
         loadJavaFXScene();
     }//GEN-LAST:event_btGoWebActionPerformed
 
@@ -568,6 +629,8 @@ public class atoomUI extends JFrame {
     private javax.swing.JButton btStop;
     private javax.swing.JButton btStopVideo;
     private javax.swing.JLabel curDurationLabel;
+    private javax.swing.JTextField durationField;
+    private javax.swing.JLabel durationLabel;
     private javax.swing.JFileChooser fileBrowser;
     private javax.swing.JLabel fullDurationLabel;
     private javax.swing.JTextField urlField;
