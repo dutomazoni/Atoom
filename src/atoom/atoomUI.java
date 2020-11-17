@@ -6,28 +6,9 @@
 package atoom;
 
 
-import java.awt.BorderLayout;
-import java.awt.Image;
-import java.awt.event.ActionEvent;
-import java.awt.event.ActionListener;
-import java.awt.image.BufferedImage;
-import java.io.IOException;
-import java.util.logging.Level;
-import java.util.logging.Logger;
-import javax.imageio.ImageIO;
-import javax.swing.ImageIcon;
-import javax.swing.JFileChooser;
-import javax.swing.border.EmptyBorder;
-import java.io.File;
-import static java.lang.Thread.sleep;
-import java.util.TimerTask;
-import javafx.scene.web.WebView;
-import javax.sound.sampled.AudioInputStream;
-import javax.sound.sampled.AudioSystem;
-import javax.sound.sampled.Clip;
-import javax.sound.sampled.LineUnavailableException;
-import javax.sound.sampled.UnsupportedAudioFileException;
-import javax.swing.Timer;
+
+//import static com.mysql.cj.x.protobuf.MysqlxPrepare.Prepare.OneOfMessage.Type.INSERT;
+
 import javafx.application.Platform;
 import javafx.embed.swing.JFXPanel;
 import javafx.scene.Scene;
@@ -36,11 +17,21 @@ import javafx.scene.layout.StackPane;
 import javafx.scene.media.Media;
 import javafx.scene.media.MediaPlayer;
 import javafx.scene.media.MediaView;
-import javax.swing.JFrame;
+import javafx.scene.web.WebView;
 
-
-
-
+import javax.imageio.ImageIO;
+import javax.sound.sampled.*;
+import javax.swing.*;
+import javax.swing.border.EmptyBorder;
+import java.awt.*;
+import java.awt.event.ActionEvent;
+import java.awt.event.ActionListener;
+import java.awt.image.BufferedImage;
+import java.io.File;
+import java.io.IOException;
+import java.sql.*;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 
 
 /**
@@ -54,25 +45,36 @@ public class atoomUI extends JFrame {
      */
     
     String filePath = "";
+    String podPath = "";
+    String imgPath = "";
+    String videoPath = "";
+    String url = "";
+    boolean isMarker = false;
+    
     ImageIcon img;
+    
     Clip clip = null;
+    
     AudioInputStream audioInputStream = null;
     static int fullDuration = 0 ;
     static int curDuration = 0 ;
+    String durLabel = "";
     public boolean isPlaying = false;
     int markerDuration = 0;
+ 
     
-    String durLabel = "";
     MediaPlayer player;
-    String url = "";
     
-    //JFrame myFrame = new JFrame();
     JFXPanel javafxPanel;
     WebView webComponent;
     
+    private static final String USERNAME = "root";
+    private static final String PASSWORD = "2002";
+    private static final String CONN_STRING = "jdbc:mysql://localhost:3306/atoom_test?useTimezone=true&serverTimezone=UTC";
+    
     
 
-    public atoomUI() {
+    public atoomUI() throws ClassNotFoundException  {
 
         
         initComponents();
@@ -85,8 +87,14 @@ public class atoomUI extends JFrame {
         curDurationLabel.setVisible(false);
         videoPanel.setVisible(false);
         
+        //metodo para alterar a base de dados - TESTES APENAS
+        //deleteFromDb(7);
+        
         
         webPanel.setSize(450,450);
+        
+        //dbConnect(USERNAME,PASSWORD,CONN_STRING);
+        
         
         
         
@@ -119,6 +127,8 @@ public class atoomUI extends JFrame {
         curDurationLabel = new javax.swing.JLabel();
         durationField = new javax.swing.JTextField();
         durationLabel = new javax.swing.JLabel();
+        btLoad = new javax.swing.JButton();
+        loadField = new javax.swing.JTextField();
 
         setDefaultCloseOperation(javax.swing.WindowConstants.EXIT_ON_CLOSE);
         setMaximumSize(null);
@@ -242,6 +252,13 @@ public class atoomUI extends JFrame {
 
         durationLabel.setText("Insert the marker duration (in seconds):");
 
+        btLoad.setText("Load");
+        btLoad.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                btLoadActionPerformed(evt);
+            }
+        });
+
         javax.swing.GroupLayout layout = new javax.swing.GroupLayout(getContentPane());
         getContentPane().setLayout(layout);
         layout.setHorizontalGroup(
@@ -278,6 +295,10 @@ public class atoomUI extends JFrame {
                         .addComponent(urlField, javax.swing.GroupLayout.PREFERRED_SIZE, 200, javax.swing.GroupLayout.PREFERRED_SIZE)
                         .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                         .addComponent(btGoWeb)
+                        .addGap(93, 93, 93)
+                        .addComponent(loadField, javax.swing.GroupLayout.PREFERRED_SIZE, 33, javax.swing.GroupLayout.PREFERRED_SIZE)
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                        .addComponent(btLoad)
                         .addGap(0, 0, Short.MAX_VALUE)))
                 .addContainerGap())
         );
@@ -297,7 +318,9 @@ public class atoomUI extends JFrame {
                         .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)))
                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
                     .addComponent(urlField, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                    .addComponent(btGoWeb))
+                    .addComponent(btGoWeb)
+                    .addComponent(btLoad)
+                    .addComponent(loadField, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 7, Short.MAX_VALUE)
                 .addComponent(audioProgress, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
@@ -327,6 +350,174 @@ public class atoomUI extends JFrame {
         pack();
     }// </editor-fold>//GEN-END:initComponents
 
+    public static void dbConnect(String user, String pass, String conn_string) throws ClassNotFoundException, SQLException
+    {
+        Connection conn = null;
+        try {
+            Class.forName("com.mysql.cj.jdbc.Driver");
+            conn = DriverManager.getConnection(CONN_STRING,USERNAME,PASSWORD);
+            System.out.println("Connected");
+            
+        }catch (SQLException e){
+            System.err.println(e);
+        }
+        
+    }
+    
+    public void addMarkerToDb(String markerPath,int idPodcast, String fileType, int markerStart, int markerDuration)
+    {
+        // adicionar a tabela marker
+        //idmarker, idpodcast, markerpath, type, start, duration
+        Connection conn = null;
+        System.out.println(markerPath);
+        System.out.println(idPodcast);
+        
+        try {
+            //Class.forName("com.mysql.cj.jdbc.Driver");
+            conn = DriverManager.getConnection(CONN_STRING,USERNAME,PASSWORD);
+            //Statement st = (Statement) conn.createStatement(); 
+            System.out.println("Connected");
+            
+            String SQL = "INSERT INTO marker (idpodcast,markerpath,type,start,duration) VALUES (?, ?, ?, ?, ?)";
+            PreparedStatement pstmt = conn.prepareStatement(SQL);
+            
+            pstmt.setInt(1, idPodcast);
+            pstmt.setString(2, markerPath);
+            pstmt.setString(3, fileType);
+            pstmt.setInt(4, markerStart);
+            pstmt.setInt(5, markerDuration);
+            
+            
+            pstmt.executeUpdate();
+            pstmt.close();
+
+            
+            //st.executeUpdate(SQL);
+
+            conn.close();
+            System.out.println("Disconnected");
+            
+        }catch (SQLException e){
+            System.err.println(e);
+        }
+        
+    }
+    
+    public void addPodcastToDb(String podcastPath) throws ClassNotFoundException
+    {
+        Connection conn = null;
+        System.out.println(podcastPath);
+        try {
+            //Class.forName("com.mysql.cj.jdbc.Driver");
+            conn = DriverManager.getConnection(CONN_STRING,USERNAME,PASSWORD);
+            //Statement st = (Statement) conn.createStatement(); 
+            System.out.println("Connected");
+            
+            String SQL = "INSERT INTO podcast (pathpodcast) VALUES (?)";
+            PreparedStatement pstmt = conn.prepareStatement(SQL);
+            pstmt.setString(1, podcastPath);
+            
+            pstmt.executeUpdate();
+            pstmt.close();
+
+            
+            //st.executeUpdate(SQL);
+
+            conn.close();
+            System.out.println("Disconnected");
+            
+        }catch (SQLException e){
+            System.err.println(e);
+        }
+  
+    }
+    
+    public int getPodcastId ()
+    {
+        int idPodcast = 0;
+        Connection conn = null;
+        
+        try {
+            //Class.forName("com.mysql.cj.jdbc.Driver");
+            conn = DriverManager.getConnection(CONN_STRING,USERNAME,PASSWORD);
+            
+            Statement st = (Statement) conn.createStatement(); 
+            System.out.println("Connected");
+            
+            String query = "Select idpodcast from podcast";
+
+            ResultSet rs = st.executeQuery(query);
+      
+            // iterate through the java resultset
+            while (rs.next())
+            {
+              idPodcast = rs.getInt("idpodcast");
+  
+              // print the results
+              System.out.format("%s\n", idPodcast);
+            }
+            conn.close();
+            System.out.println("Disconnected");
+            
+        }catch (SQLException e){
+            System.err.println(e);
+        }
+        return idPodcast;
+    }
+    
+    public void loadPodcast(int idPodcast)
+    {
+        Connection conn = null;
+        
+        try {
+            //Class.forName("com.mysql.cj.jdbc.Driver");
+            conn = DriverManager.getConnection(CONN_STRING,USERNAME,PASSWORD);
+            
+            Statement st = (Statement) conn.createStatement(); 
+            System.out.println("Connected");
+            
+            String query = "select * from podcast natural join marker";
+
+            ResultSet rs = st.executeQuery(query);
+      
+            // iterate through the java resultset
+            while (rs.next())
+            {
+              if (idPodcast == rs.getInt("idpodcast"))
+              {
+                  
+              }
+  
+              // print the results
+              System.out.format("%s\n", idPodcast);
+            }
+            conn.close();
+            System.out.println("Disconnected");
+            
+        }catch (SQLException e){
+            System.err.println(e);
+        }
+    }
+    
+    /*public final void deleteFromDb (int id){
+        
+        Connection conn = null;
+        try {
+            //Class.forName("com.mysql.cj.jdbc.Driver");
+            conn = DriverManager.getConnection(CONN_STRING,USERNAME,PASSWORD);
+            Statement st = (Statement) conn.createStatement(); 
+            
+            System.out.println("Connected");
+            st.executeUpdate("DELETE FROM podcast where idpodcast =" +id);
+
+            conn.close();
+            System.out.println("Disconnected");
+            
+        }catch (SQLException e){
+            System.err.println(e);
+        }
+    }*/
+    
     private void audioProgressMouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_audioProgressMouseClicked
         // TODO add your handling code here:
 
@@ -377,6 +568,7 @@ public class atoomUI extends JFrame {
       @Override
       public void run() {
 
+        isMarker = true;
         BorderPane borderPane = new BorderPane();
         webComponent = new WebView();
         url = urlField.getText();
@@ -388,8 +580,53 @@ public class atoomUI extends JFrame {
 
       }
     });
+       
     }
     
+    public void addAudio(File audioFile) throws UnsupportedAudioFileException
+    {
+        try {
+
+                fullDurationLabel.setVisible(true);
+                curDurationLabel.setVisible(true);
+
+                audioInputStream = AudioSystem.getAudioInputStream(audioFile);
+                clip = AudioSystem.getClip();
+                clip.open(audioInputStream);
+                
+
+                fullDuration = (int) (clip.getMicrosecondLength()/1000000);
+                fullDurationLabel.setText(String.format("%d:%02d:%02d",  fullDuration / 3600, ( fullDuration % 3600) / 60, ( fullDuration % 60)));
+
+                curDuration = (int) (clip.getMicrosecondPosition()/1000000);
+                curDurationLabel.setText(String.format("%d:%02d:%02d",  curDuration / 3600, ( curDuration % 3600) / 60, ( curDuration % 60)));
+
+                audioProgress.setMinimum(0);
+                audioProgress.setMaximum(fullDuration);
+                //String.format("%d:%02d:%02d", s / 3600, (s % 3600) / 60, (s % 60));
+
+                //curTime = String.format("%d:%02d:%02d",  curDuration / 3600, ( curDuration % 3600) / 60, ( curDuration % 60));
+
+                int delay = 100; //milliseconds
+                ActionListener updateProgressBar = new ActionListener() {
+                    public void actionPerformed(ActionEvent evt) {
+
+                        curDuration = (int) (clip.getMicrosecondPosition()/1000000);
+                        durLabel = String.format("%d:%02d:%02d",  curDuration / 3600, ( curDuration % 3600) / 60, ( curDuration % 60));
+                        curDurationLabel.setText(durLabel);
+                        audioProgress.setValue(curDuration);
+
+                        audioProgress.revalidate();
+                        curDurationLabel.revalidate();
+                        //System.out.println("executei");
+                    }
+                };
+                new Timer(delay, updateProgressBar).start();
+
+            } catch (IOException | LineUnavailableException ex) {
+                Logger.getLogger(atoomUI.class.getName()).log(Level.SEVERE, null, ex);
+            }
+    }
 
     private void btMarkerActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btMarkerActionPerformed
         // TODO add your handling code here:
@@ -429,13 +666,16 @@ public class atoomUI extends JFrame {
         
         if (type.equals("mp4"))
         {
+            
+            //videoPath = filePath;
             getVideo(filePath);
         }
         
         
         if (type.equals("jpg") || type.equals("png"))
         {
-
+            //imgPath = filePath;
+            
             try {
                 
                 BufferedImage bimg;
@@ -448,69 +688,55 @@ public class atoomUI extends JFrame {
                 btImg.setOpaque(false);
                 btImg.setIcon(img);
                 btImg.setVisible(true);
-                
+                addMarkerToDb(filePath,getPodcastId(),type,startPoint,markerDuration);
                 
 
             } catch (IOException ex) {
                 Logger.getLogger(atoomUI.class.getName()).log(Level.SEVERE, null, ex);
             }
 
-            
-
-            
-
-
-            
         }
 
         if (type.equals("wav"))
         {
-
             try {
-
-                fullDurationLabel.setVisible(true);
-                curDurationLabel.setVisible(true);
-
-                audioInputStream = AudioSystem.getAudioInputStream(file);
-                clip = AudioSystem.getClip();
-                clip.open(audioInputStream);
-                
-
-                fullDuration = (int) (clip.getMicrosecondLength()/1000000);
-                fullDurationLabel.setText(String.format("%d:%02d:%02d",  fullDuration / 3600, ( fullDuration % 3600) / 60, ( fullDuration % 60)));
-
-                curDuration = (int) (clip.getMicrosecondPosition()/1000000);
-                curDurationLabel.setText(String.format("%d:%02d:%02d",  curDuration / 3600, ( curDuration % 3600) / 60, ( curDuration % 60)));
-
-                audioProgress.setMinimum(0);
-                audioProgress.setMaximum(fullDuration);
-                //String.format("%d:%02d:%02d", s / 3600, (s % 3600) / 60, (s % 60));
-
-                //curTime = String.format("%d:%02d:%02d",  curDuration / 3600, ( curDuration % 3600) / 60, ( curDuration % 60));
-
-                int delay = 100; //milliseconds
-                ActionListener updateProgressBar = new ActionListener() {
-                    public void actionPerformed(ActionEvent evt) {
-
-                        curDuration = (int) (clip.getMicrosecondPosition()/1000000);
-                        durLabel = String.format("%d:%02d:%02d",  curDuration / 3600, ( curDuration % 3600) / 60, ( curDuration % 60));
-                        curDurationLabel.setText(durLabel);
-                        audioProgress.setValue(curDuration);
-
-                        audioProgress.revalidate();
-                        curDurationLabel.revalidate();
-                        //System.out.println("executei");
-                    }
-                };
-                new Timer(delay, updateProgressBar).start();
-
-            } catch (UnsupportedAudioFileException | IOException | LineUnavailableException ex) {
+                addAudio(file);
+                addPodcastToDb(filePath);
+            } catch (UnsupportedAudioFileException ex) {
+                Logger.getLogger(atoomUI.class.getName()).log(Level.SEVERE, null, ex);
+            } catch (ClassNotFoundException ex) {
                 Logger.getLogger(atoomUI.class.getName()).log(Level.SEVERE, null, ex);
             }
 
         }
+        
+        //aqui a função de adicionar na db
+        
+        /*if(type.equals("wav"))
+        {
+            try {
+                addPodcastToDb(filePath);
+            } catch (ClassNotFoundException ex) {
+                Logger.getLogger(atoomUI.class.getName()).log(Level.SEVERE, null, ex);
+            }
+            
+        }else{
+            addMarkerToDb(filePath,getPodcastId(),type,startPoint,markerDuration);    
+            
+        }*/
+        
+        //System.out.println(getPodcastId());
+        
+        
+        
+        
+        
+        
     }//GEN-LAST:event_btMarkerActionPerformed
-
+    
+    
+    
+    
     private void btStopActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btStopActionPerformed
         // TODO add your handling code here:
         clip.stop();
@@ -531,7 +757,7 @@ public class atoomUI extends JFrame {
         clip.start();
         isPlaying = true;
         System.out.print(isPlaying);
-                    // duração da imagem
+            // duração da imagem
             if(isPlaying == true)
             {
                java.util.Timer timeImg = new java.util.Timer();
@@ -568,6 +794,12 @@ public class atoomUI extends JFrame {
         // TODO add your handling code here:
         player.play();
     }//GEN-LAST:event_btPlayVideoActionPerformed
+
+    private void btLoadActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btLoadActionPerformed
+        // TODO add your handling code here:
+        int podToLoad = Integer.parseInt(loadField.getText());
+        loadPodcast(podToLoad);
+    }//GEN-LAST:event_btLoadActionPerformed
                                        
     
 
@@ -607,7 +839,11 @@ public class atoomUI extends JFrame {
         java.awt.EventQueue.invokeLater(new Runnable() {
 
             public void run() {
-                new atoomUI().setVisible(true);
+                try {
+                    new atoomUI().setVisible(true);
+                } catch (ClassNotFoundException ex) {
+                    Logger.getLogger(atoomUI.class.getName()).log(Level.SEVERE, null, ex);
+                }
                 
                 
                 
@@ -621,6 +857,7 @@ public class atoomUI extends JFrame {
     private static javax.swing.JProgressBar audioProgress;
     private javax.swing.JButton btGoWeb;
     private javax.swing.JButton btImg;
+    private javax.swing.JButton btLoad;
     private javax.swing.JButton btMarker;
     private javax.swing.JButton btPause;
     private javax.swing.JButton btPauseVideo;
@@ -633,6 +870,7 @@ public class atoomUI extends JFrame {
     private javax.swing.JLabel durationLabel;
     private javax.swing.JFileChooser fileBrowser;
     private javax.swing.JLabel fullDurationLabel;
+    private javax.swing.JTextField loadField;
     private javax.swing.JTextField urlField;
     private javax.swing.JPanel videoPanel;
     private javax.swing.JPanel webPanel;
