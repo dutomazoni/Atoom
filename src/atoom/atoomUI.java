@@ -49,6 +49,7 @@ public class atoomUI extends JFrame {
     String imgPath = "";
     String videoPath = "";
     String url = "";
+    //File file = null;
     boolean isMarker = false;
     
     ImageIcon img;
@@ -61,6 +62,7 @@ public class atoomUI extends JFrame {
     String durLabel = "";
     public boolean isPlaying = false;
     int markerDuration = 0;
+    int startPoint = 0;
  
     
     MediaPlayer player;
@@ -350,7 +352,7 @@ public class atoomUI extends JFrame {
         pack();
     }// </editor-fold>//GEN-END:initComponents
 
-    public static void dbConnect(String user, String pass, String conn_string) throws ClassNotFoundException, SQLException
+    /*public static void dbConnect(String user, String pass, String conn_string) throws ClassNotFoundException, SQLException
     {
         Connection conn = null;
         try {
@@ -362,7 +364,7 @@ public class atoomUI extends JFrame {
             System.err.println(e);
         }
         
-    }
+    }*/
     
     public void addMarkerToDb(String markerPath,int idPodcast, String fileType, int markerStart, int markerDuration)
     {
@@ -465,7 +467,7 @@ public class atoomUI extends JFrame {
         return idPodcast;
     }
     
-    public void loadPodcast(int idPodcast)
+    public void loadPodcast(int idPodcast) throws UnsupportedAudioFileException
     {
         Connection conn = null;
         
@@ -485,7 +487,28 @@ public class atoomUI extends JFrame {
             {
               if (idPodcast == rs.getInt("idpodcast"))
               {
-                  
+                //setar audio podcast
+                addAudioFromPath(rs.getString("pathpodcast"));
+
+                //adicionar marcadores
+                //setar marcador a partir do tipo startpoint e duração
+                if (rs.getString("type").equals("mp4"))
+                  {
+                      //videoPath = filePath;
+                      addVideo(filePath);
+                  }
+
+
+                if (rs.getString("type").equals("jpg") || rs.getString("type").equals("png"))
+                {
+                    //imgPath = filePath;
+                    addImgFromPath(rs.getString("markerpath"));
+                    startPoint = rs.getInt("start") * 1000 ;
+                    markerDuration = rs.getInt("duration") ;
+
+                }
+                // startpoint e duração
+                 
               }
   
               // print the results
@@ -536,32 +559,7 @@ public class atoomUI extends JFrame {
         curDurationLabel.revalidate();
     }//GEN-LAST:event_audioProgressMouseClicked
 
-    private void getVideo(String videoPath){
-            final JFXPanel VFXPanel = new JFXPanel();
-
-            File video_source = new File(videoPath);
-            Media m = new Media(video_source.toURI().toString());
-            player = new MediaPlayer(m);
-            MediaView viewer = new MediaView(player);
-
-            StackPane root = new StackPane();
-            Scene scene = new Scene(root);
-
-            viewer.setFitWidth(500);
-            viewer.setFitHeight(500);
-            viewer.setPreserveRatio(true);
-
-            // add video to stackpane
-            root.getChildren().add(viewer);
-
-            VFXPanel.setScene(scene);
-            
-            videoPanel.setVisible(true);
-            
-            videoPanel.setLayout(new BorderLayout());
-            videoPanel.add(VFXPanel, BorderLayout.CENTER);
-            player.play();
-    }
+    
     
     private void loadJavaFXScene(){
       Platform.runLater(new Runnable() {
@@ -583,10 +581,55 @@ public class atoomUI extends JFrame {
        
     }
     
-    public void addAudio(File audioFile) throws UnsupportedAudioFileException
+    public void addAudioFromPath(String audioPath) throws UnsupportedAudioFileException 
     {
         try {
+                File audioFile = new File(audioPath);
+                fullDurationLabel.setVisible(true);
+                curDurationLabel.setVisible(true);
 
+                audioInputStream = AudioSystem.getAudioInputStream(audioFile);
+                clip = AudioSystem.getClip();
+                clip.open(audioInputStream);
+                
+
+                fullDuration = (int) (clip.getMicrosecondLength()/1000000);
+                fullDurationLabel.setText(String.format("%d:%02d:%02d",  fullDuration / 3600, ( fullDuration % 3600) / 60, ( fullDuration % 60)));
+
+                curDuration = (int) (clip.getMicrosecondPosition()/1000000);
+                curDurationLabel.setText(String.format("%d:%02d:%02d",  curDuration / 3600, ( curDuration % 3600) / 60, ( curDuration % 60)));
+
+                audioProgress.setMinimum(0);
+                audioProgress.setMaximum(fullDuration);
+                //String.format("%d:%02d:%02d", s / 3600, (s % 3600) / 60, (s % 60));
+
+                //curTime = String.format("%d:%02d:%02d",  curDuration / 3600, ( curDuration % 3600) / 60, ( curDuration % 60));
+
+                int delay = 100; //milliseconds
+                ActionListener updateProgressBar = new ActionListener() {
+                    public void actionPerformed(ActionEvent evt) {
+
+                        curDuration = (int) (clip.getMicrosecondPosition()/1000000);
+                        durLabel = String.format("%d:%02d:%02d",  curDuration / 3600, ( curDuration % 3600) / 60, ( curDuration % 60));
+                        curDurationLabel.setText(durLabel);
+                        audioProgress.setValue(curDuration);
+
+                        audioProgress.revalidate();
+                        curDurationLabel.revalidate();
+                        //System.out.println("executei");
+                    }
+                };
+                new Timer(delay, updateProgressBar).start();
+
+            } catch (IOException | LineUnavailableException ex) {
+                Logger.getLogger(atoomUI.class.getName()).log(Level.SEVERE, null, ex);
+            }
+    }
+    
+    public void addAudioFromFile(File audioFile) throws UnsupportedAudioFileException 
+    {
+        try {
+                
                 fullDurationLabel.setVisible(true);
                 curDurationLabel.setVisible(true);
 
@@ -628,6 +671,80 @@ public class atoomUI extends JFrame {
             }
     }
 
+    public void addImgFromPath (String imgPath)
+    {
+        try {
+                
+                File imgFile = new File(imgPath);
+                BufferedImage bimg;
+                bimg = ImageIO.read(imgFile);
+                Image scaledImage = bimg.getScaledInstance(460, 460, Image.SCALE_SMOOTH);
+
+                img = new ImageIcon(scaledImage);
+
+                btImg.setBorder (new EmptyBorder(0,0,0,0));
+                btImg.setOpaque(false);
+                btImg.setIcon(img);
+                btImg.setVisible(true);
+                
+                
+
+            } catch (IOException ex) {
+                Logger.getLogger(atoomUI.class.getName()).log(Level.SEVERE, null, ex);
+            }
+    }
+    
+    public void addImgFromFile (File imgFile)
+    {
+        try {
+                
+                BufferedImage bimg;
+                bimg = ImageIO.read(imgFile);
+                Image scaledImage = bimg.getScaledInstance(460, 460, Image.SCALE_SMOOTH);
+
+                img = new ImageIcon(scaledImage);
+
+                btImg.setBorder (new EmptyBorder(0,0,0,0));
+                btImg.setOpaque(false);
+                btImg.setIcon(img);
+                btImg.setVisible(true);
+                
+                
+
+            } catch (IOException ex) {
+                Logger.getLogger(atoomUI.class.getName()).log(Level.SEVERE, null, ex);
+            }
+    }
+    
+    private void addVideo(String videoPath){
+            final JFXPanel VFXPanel = new JFXPanel();
+
+            File video_source = new File(videoPath);
+            Media m = new Media(video_source.toURI().toString());
+            player = new MediaPlayer(m);
+            MediaView viewer = new MediaView(player);
+
+            StackPane root = new StackPane();
+            Scene scene = new Scene(root);
+
+            viewer.setFitWidth(500);
+            viewer.setFitHeight(500);
+            viewer.setPreserveRatio(true);
+
+            // add video to stackpane
+            root.getChildren().add(viewer);
+
+            VFXPanel.setScene(scene);
+            
+            videoPanel.setVisible(true);
+            
+            videoPanel.setLayout(new BorderLayout());
+            videoPanel.add(VFXPanel, BorderLayout.CENTER);
+            player.play();
+    }
+    
+
+
     private void btMarkerActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btMarkerActionPerformed
         // TODO add your handling code here:
 
@@ -650,7 +767,7 @@ public class atoomUI extends JFrame {
         String type = filePath.substring(filePath.length() - 3);
         System.out.println(type);
         
-        int startPoint = curDuration;
+        startPoint = curDuration;
         
         
         if(durationField.getText().equals("") || durationField.getText().equals("0") )
@@ -660,47 +777,32 @@ public class atoomUI extends JFrame {
         {
             markerDuration = Integer.parseInt(durationField.getText()) * 1000;
         }
+        System.out.println("marker start: " + startPoint);
+        System.out.println("marker duration: " + markerDuration);
         
-        System.out.println(startPoint);
-        System.out.println(markerDuration);
         
         if (type.equals("mp4"))
         {
-            
             //videoPath = filePath;
-            getVideo(filePath);
+            addVideo(filePath);
+            
+
         }
         
         
         if (type.equals("jpg") || type.equals("png"))
         {
             //imgPath = filePath;
-            
-            try {
-                
-                BufferedImage bimg;
-                bimg = ImageIO.read(file);
-                Image scaledImage = bimg.getScaledInstance(460, 460, Image.SCALE_SMOOTH);
+            addImgFromFile(file);
+            addMarkerToDb(filePath,getPodcastId(),type,startPoint,markerDuration);
 
-                img = new ImageIcon(scaledImage);
-
-                btImg.setBorder (new EmptyBorder(0,0,0,0));
-                btImg.setOpaque(false);
-                btImg.setIcon(img);
-                btImg.setVisible(true);
-                addMarkerToDb(filePath,getPodcastId(),type,startPoint,markerDuration);
-                
-
-            } catch (IOException ex) {
-                Logger.getLogger(atoomUI.class.getName()).log(Level.SEVERE, null, ex);
-            }
 
         }
 
         if (type.equals("wav"))
         {
             try {
-                addAudio(file);
+                addAudioFromFile(file);
                 addPodcastToDb(filePath);
             } catch (UnsupportedAudioFileException ex) {
                 Logger.getLogger(atoomUI.class.getName()).log(Level.SEVERE, null, ex);
@@ -709,34 +811,10 @@ public class atoomUI extends JFrame {
             }
 
         }
-        
-        //aqui a função de adicionar na db
-        
-        /*if(type.equals("wav"))
-        {
-            try {
-                addPodcastToDb(filePath);
-            } catch (ClassNotFoundException ex) {
-                Logger.getLogger(atoomUI.class.getName()).log(Level.SEVERE, null, ex);
-            }
-            
-        }else{
-            addMarkerToDb(filePath,getPodcastId(),type,startPoint,markerDuration);    
-            
-        }*/
-        
-        //System.out.println(getPodcastId());
-        
-        
-        
-        
-        
-        
+               
     }//GEN-LAST:event_btMarkerActionPerformed
     
-    
-    
-    
+
     private void btStopActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btStopActionPerformed
         // TODO add your handling code here:
         clip.stop();
@@ -758,6 +836,9 @@ public class atoomUI extends JFrame {
         isPlaying = true;
         System.out.print(isPlaying);
             // duração da imagem
+        if (startPoint == curDuration) //arrumar
+        {
+            btImg.setVisible(true);
             if(isPlaying == true)
             {
                java.util.Timer timeImg = new java.util.Timer();
@@ -769,7 +850,13 @@ public class atoomUI extends JFrame {
                             btImg.setIcon(null);
                         }
                     }, markerDuration); 
-            }
+            } 
+        }else {
+            btImg.setVisible(false);
+        }
+           
+       
+        
     }//GEN-LAST:event_btPlayActionPerformed
 
     private void btGoWebActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btGoWebActionPerformed
@@ -798,7 +885,11 @@ public class atoomUI extends JFrame {
     private void btLoadActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btLoadActionPerformed
         // TODO add your handling code here:
         int podToLoad = Integer.parseInt(loadField.getText());
-        loadPodcast(podToLoad);
+        try {
+            loadPodcast(podToLoad);
+        } catch (UnsupportedAudioFileException ex) {
+            Logger.getLogger(atoomUI.class.getName()).log(Level.SEVERE, null, ex);
+        }
     }//GEN-LAST:event_btLoadActionPerformed
                                        
     
