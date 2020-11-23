@@ -1,0 +1,200 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project version="4">
+  <component name="BranchesTreeState">
+    <expand>
+      <path>
+        <item name="ROOT" type="e8cecc67:BranchNodeDescriptor" />
+        <item name="LOCAL_ROOT" type="e8cecc67:BranchNodeDescriptor" />
+      </path>
+      <path>
+        <item name="ROOT" type="e8cecc67:BranchNodeDescriptor" />
+        <item name="REMOTE_ROOT" type="e8cecc67:BranchNodeDescriptor" />
+      </path>
+      <path>
+        <item name="ROOT" type="e8cecc67:BranchNodeDescriptor" />
+        <item name="REMOTE_ROOT" type="e8cecc67:BranchNodeDescriptor" />
+        <item name="GROUP_NODE:origin" type="e8cecc67:BranchNodeDescriptor" />
+      </path>
+    </expand>
+    <select />
+  </component>
+  <component name="ChangeListManager">
+    <list default="true" id="78649ef0-e087-45aa-bad4-e2d8df9c92b4" name="Default Changelist" comment="">
+      <change afterPath="$PROJECT_DIR$/.idea/.gitignore" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/.idea/libraries/AbsoluteLayout.xml" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/.idea/libraries/atoom.xml" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/.idea/libraries/bare_bones_browser_launch_v3_2.xml" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/.idea/misc.xml" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/.idea/uiDesigner.xml" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/.idea/vcs.xml" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/atoom.iml" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/build.xml" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/build/built-jar.properties" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/build/classes/.netbeans_automatic_build" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/build/classes/.netbeans_update_resources" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/build/classes/atoom/atoomUI$1.class" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/build/classes/atoom/atoomUI$10.class" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/build/classes/atoom/atoomUI$11.class" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/build/classes/atoom/atoomUI$12.class" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/build/classes/atoom/atoomUI$13.class" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/build/classes/atoom/atoomUI$14.class" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/build/classes/atoom/atoomUI$2.class" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/build/classes/atoom/atoomUI$3.class" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/build/classes/atoom/atoomUI$4.class" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/build/classes/atoom/atoomUI$5.class" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/build/classes/atoom/atoomUI$6.class" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/build/classes/atoom/atoomUI$7.class" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/build/classes/atoom/atoomUI$8.class" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/build/classes/atoom/atoomUI$9.class" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/build/classes/atoom/atoomUI.class" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/build/classes/atoom/atoomUI.form" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/build/classes/icons/rs/add.png" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/build/classes/icons/rs/close.png" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/build/classes/icons/rs/forward-30s.png" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/build/classes/icons/rs/maximize.png" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/build/classes/icons/rs/pause.png" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/build/classes/icons/rs/play.png" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/build/classes/icons/rs/replay-30s.png" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/build/classes/icons/rs/stop.png" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/build/manifest.mf" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/build/null380186282" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/dist/README.TXT" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/dist/atoom.jar" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/dist/lib/AbsoluteLayout.jar" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/hs_err_pid7700.log" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/lib/bare-bones-browser-launch-v3.2.jar" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/manifest.mf" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/master-application.jnlp" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/nbproject/build-impl.xml" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/nbproject/configs/JWS_generated.properties" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/nbproject/genfiles.properties" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/nbproject/jnlp-impl.xml" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/nbproject/private/config.properties" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/nbproject/private/private.properties" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/nbproject/private/private.xml" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/nbproject/project.properties" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/nbproject/project.xml" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/preview-application.html" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/atoom/atoomUI.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/atoom/atoomUI.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/dbConnection/mySQLConnection.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/dbConnection/mySQLConnection.java" afterDir="false" />
+    </list>
+    <option name="SHOW_DIALOG" value="false" />
+    <option name="HIGHLIGHT_CONFLICTS" value="true" />
+    <option name="HIGHLIGHT_NON_ACTIVE_CHANGELIST" value="false" />
+    <option name="LAST_RESOLUTION" value="IGNORE" />
+  </component>
+  <component name="Git.Settings">
+    <option name="RECENT_GIT_ROOT_PATH" value="$PROJECT_DIR$" />
+  </component>
+  <component name="ProjectId" id="1kNjwV9BkDtPa7GRNEjixqnqi6q" />
+  <component name="ProjectLevelVcsManager">
+    <ConfirmationsSetting value="2" id="Add" />
+  </component>
+  <component name="ProjectViewState">
+    <option name="hideEmptyMiddlePackages" value="true" />
+    <option name="showLibraryContents" value="true" />
+  </component>
+  <component name="PropertiesComponent">
+    <property name="ASKED_ADD_EXTERNAL_FILES" value="true" />
+    <property name="DatabaseDriversLRU" value="mysql" />
+    <property name="RunOnceActivity.OpenProjectViewOnStart" value="true" />
+    <property name="SHARE_PROJECT_CONFIGURATION_FILES" value="true" />
+    <property name="UI_DESIGNER_EDITOR_MODE.PaletteManager.WIDTH" value="160" />
+    <property name="UI_DESIGNER_EDITOR_MODE.UIDesignerToolWindowManager.WIDTH" value="256" />
+    <property name="WebServerToolWindowFactoryState" value="false" />
+    <property name="aspect.path.notification.shown" value="true" />
+    <property name="last_opened_file_path" value="$PROJECT_DIR$" />
+    <property name="project.structure.last.edited" value="Project" />
+    <property name="project.structure.proportion" value="0.0" />
+    <property name="project.structure.side.proportion" value="0.0" />
+  </component>
+  <component name="RunManager">
+    <configuration name="atoomUI" type="Application" factoryName="Application" temporary="true" nameIsGenerated="true">
+      <option name="MAIN_CLASS_NAME" value="atoom.atoomUI" />
+      <module name="atoom" />
+      <extension name="coverage">
+        <pattern>
+          <option name="PATTERN" value="atoom.*" />
+          <option name="ENABLED" value="true" />
+        </pattern>
+      </extension>
+      <method v="2">
+        <option name="Make" enabled="true" />
+      </method>
+    </configuration>
+    <recent_temporary>
+      <list>
+        <item itemvalue="Application.atoomUI" />
+      </list>
+    </recent_temporary>
+  </component>
+  <component name="SpellCheckerSettings" RuntimeDictionaries="0" Folders="0" CustomDictionaries="0" DefaultDictionary="application-level" UseSingleDictionary="true" transferred="true" />
+  <component name="TaskManager">
+    <task active="true" id="Default" summary="Default task">
+      <changelist id="78649ef0-e087-45aa-bad4-e2d8df9c92b4" name="Default Changelist" comment="" />
+      <created>1605548189737</created>
+      <option name="number" value="Default" />
+      <option name="presentableId" value="Default" />
+      <updated>1605548189737</updated>
+      <workItem from="1605548200322" duration="451000" />
+      <workItem from="1605548747016" duration="194000" />
+    </task>
+    <servers />
+  </component>
+  <component name="TypeScriptGeneratedFilesManager">
+    <option name="version" value="3" />
+  </component>
+  <component name="Vcs.Log.Tabs.Properties">
+    <option name="TAB_STATES">
+      <map>
+        <entry key="MAIN">
+          <value>
+            <State />
+          </value>
+        </entry>
+      </map>
+    </option>
+    <option name="oldMeFiltersMigrated" value="true" />
+  </component>
+  <component name="VcsManagerConfiguration">
+    <option name="ADD_EXTERNAL_FILES_SILENTLY" value="true" />
+  </component>
+  <component name="WindowStateProjectService">
+    <state x="552" y="178" key="#com.intellij.execution.impl.EditConfigurationsDialog" timestamp="1605548488456">
+      <screen x="0" y="0" width="1920" height="1040" />
+    </state>
+    <state x="552" y="178" key="#com.intellij.execution.impl.EditConfigurationsDialog/0.0.1920.1040@0.0.1920.1040" timestamp="1605548488456" />
+    <state x="740" y="257" key="FileChooserDialogImpl" timestamp="1605548919433">
+      <screen x="0" y="0" width="1920" height="1040" />
+    </state>
+    <state x="740" y="257" key="FileChooserDialogImpl/0.0.1920.1040@0.0.1920.1040" timestamp="1605548919433" />
+    <state width="1340" height="282" key="GridCell.Tab.0.bottom" timestamp="1605548660523">
+      <screen x="0" y="0" width="1920" height="1040" />
+    </state>
+    <state width="1340" height="282" key="GridCell.Tab.0.bottom/0.0.1920.1040@0.0.1920.1040" timestamp="1605548660523" />
+    <state width="1340" height="282" key="GridCell.Tab.0.center" timestamp="1605548660523">
+      <screen x="0" y="0" width="1920" height="1040" />
+    </state>
+    <state width="1340" height="282" key="GridCell.Tab.0.center/0.0.1920.1040@0.0.1920.1040" timestamp="1605548660523" />
+    <state width="1340" height="282" key="GridCell.Tab.0.left" timestamp="1605548660523">
+      <screen x="0" y="0" width="1920" height="1040" />
+    </state>
+    <state width="1340" height="282" key="GridCell.Tab.0.left/0.0.1920.1040@0.0.1920.1040" timestamp="1605548660523" />
+    <state width="1340" height="282" key="GridCell.Tab.0.right" timestamp="1605548660523">
+      <screen x="0" y="0" width="1920" height="1040" />
+    </state>
+    <state width="1340" height="282" key="GridCell.Tab.0.right/0.0.1920.1040@0.0.1920.1040" timestamp="1605548660523" />
+    <state x="687" y="256" key="NewModule_or_Project.wizard" timestamp="1605548940035">
+      <screen x="0" y="0" width="1920" height="1040" />
+    </state>
+    <state x="687" y="256" key="NewModule_or_Project.wizard/0.0.1920.1040@0.0.1920.1040" timestamp="1605548940035" />
+    <state x="440" y="94" key="SettingsEditor" timestamp="1605548347130">
+      <screen x="0" y="0" width="1920" height="1040" />
+    </state>
+    <state x="440" y="94" key="SettingsEditor/0.0.1920.1040@0.0.1920.1040" timestamp="1605548347130" />
+    <state x="616" y="240" key="run.anything.popup" timestamp="1605548295157">
+      <screen x="0" y="0" width="1920" height="1040" />
+    </state>
+    <state x="616" y="240" key="run.anything.popup/0.0.1920.1040@0.0.1920.1040" timestamp="1605548295157" />
+  </component>
+</project>
