@@ -29,7 +29,10 @@ import java.awt.event.ActionListener;
 import java.awt.image.BufferedImage;
 import java.io.File;
 import java.io.IOException;
+import static java.lang.Thread.sleep;
 import java.sql.*;
+import java.util.TimerTask;
+import java.util.logging.Handler;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 
@@ -51,6 +54,7 @@ public class atoomUI extends JFrame {
     String url = "";
     //File file = null;
     boolean isMarker = false;
+    boolean checkTest = false;
     
     ImageIcon img;
     
@@ -481,7 +485,9 @@ public class atoomUI extends JFrame {
             String query = "select * from podcast natural join marker";
 
             ResultSet rs = st.executeQuery(query);
-      
+            int tempStart = 0;
+            int tempDuration = 0;
+            
             // iterate through the java resultset
             while (rs.next())
             {
@@ -502,21 +508,27 @@ public class atoomUI extends JFrame {
                 if (rs.getString("type").equals("jpg") || rs.getString("type").equals("png"))
                 {
                     //imgPath = filePath;
+                    
                     addImgFromPath(rs.getString("markerpath"));
-                    startPoint = rs.getInt("start") * 1000 ;
-                    markerDuration = rs.getInt("duration") ;
+                    tempStart = rs.getInt("start") * 1000 ;
+                    tempDuration = rs.getInt("duration") ;
+                    
+                    
 
                 }
                 // startpoint e duração
                  
               }
-  
+              
               // print the results
-              System.out.format("%s\n", idPodcast);
+              //System.out.format("%s\n", idPodcast);
             }
             conn.close();
             System.out.println("Disconnected");
-            
+            startPoint = tempStart;
+            markerDuration = tempDuration;
+            System.out.println("Start point:" + startPoint);
+            System.out.println("Duration:" + markerDuration);
         }catch (SQLException e){
             System.err.println(e);
         }
@@ -685,7 +697,7 @@ public class atoomUI extends JFrame {
                 btImg.setBorder (new EmptyBorder(0,0,0,0));
                 btImg.setOpaque(false);
                 btImg.setIcon(img);
-                btImg.setVisible(true);
+                btImg.setVisible(false);
                 
                 
 
@@ -834,35 +846,50 @@ public class atoomUI extends JFrame {
         // TODO add your handling code here:
         clip.start();
         isPlaying = true;
+        
         System.out.print(isPlaying);
-            // duração da imagem
-        if (startPoint == curDuration) //arrumar
-        {
-            btImg.setVisible(true);
-            if(isPlaying == true)
-            {
-               java.util.Timer timeImg = new java.util.Timer();
+        // duração da imagem
+        
+        int delay = 0;
+        int period = 500;
+        
+        java.util.Timer timerCheck = new java.util.Timer(); 
+        
+        timerCheck.schedule(new java.util.TimerTask() {
+            @Override
+            public void run() {
+                
+                if(isPlaying == true && curDuration == (startPoint/1000))
+                {
+                    checkTest = true;
+                    btImg.setVisible(true);
+                    java.util.Timer timeImg = new java.util.Timer();
 
-               timeImg.schedule(new java.util.TimerTask() {
+                    timeImg.schedule(new java.util.TimerTask() {
                         @Override
                         public void run() {
 
                             btImg.setIcon(null);
                         }
                     }, markerDuration); 
-            } 
-        }else {
-            btImg.setVisible(false);
-        }
-           
-       
+                    
+                }else{
+                    checkTest = false;
+                }
+                //System.out.println(checkTest);
+                //throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
+            }
+        }, delay,period);
         
+        
+        
+  
     }//GEN-LAST:event_btPlayActionPerformed
 
     private void btGoWebActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btGoWebActionPerformed
         // TODO add your handling code here:
-        int startPoint = curDuration;
-        int markerDuration = Integer.parseInt(durationField.getText());
+        /*int startPoint = curDuration;
+        int markerDuration = Integer.parseInt(durationField.getText());*/
         loadJavaFXScene();
     }//GEN-LAST:event_btGoWebActionPerformed
 
